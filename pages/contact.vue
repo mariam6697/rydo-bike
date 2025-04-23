@@ -6,6 +6,10 @@
             <UAlert title="Your message was sent successfully" description="We will reach back to you as soon as posible :)" />
         </template>
 
+        <template v-else-if="sentError">
+            <UAlert color="error" title="Try again :(" description="There was an error sending your contact form, please try again later" />
+        </template>
+
         <UForm :schema="schema" :state="state" class="text-gray-800 space-y-4 h-auto py-2" @submit="onSubmit">
             <UFormField class="text-gray-800" label="Name" name="name">
                 <UInput v-model="state.name" class="w-full" placeholder="Your name or your company's" />
@@ -54,8 +58,8 @@ async function onSubmit(_event: FormSubmitEvent<Schema>) {
         sentSuccessfully.value = true;
         sentError.value = false;
     } else {
-        sentSuccessfully.value = true;
-        sentError.value = false;
+        sentSuccessfully.value = false;
+        sentError.value = true;
     }
 }
 
