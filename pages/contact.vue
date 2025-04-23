@@ -57,6 +57,7 @@ async function onSubmit(_event: FormSubmitEvent<Schema>) {
     if (success) {
         sentSuccessfully.value = true;
         sentError.value = false;
+        _resetForm();
     } else {
         sentSuccessfully.value = false;
         sentError.value = true;
@@ -74,5 +75,11 @@ async function _postContactForm(data: { name: string, email: string, message: st
         console.log('Error sending contact form to backend:', error);
         return false;
     }
+}
+
+function _resetForm() {
+    state.name = '';
+    state.email = '';
+    state.message = '';
 }
 </script>

@@ -1,7 +1,8 @@
-import bcrypt from 'bcrypt';
 import { defineEventHandler, readBody, setResponseStatus } from 'h3';
-import { SALT_ROUNDS } from '../constants/auth';
-import { UserModel } from '../db/models/users.models';
+import { UserServiceImpl } from '../services/impl/user.service';
+import type { UserService } from '../services/user.service';
+
+const userService: UserService = new UserServiceImpl();
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -13,20 +14,13 @@ export default defineEventHandler(async (event) => {
   }
 
   // Check uniqueness
-  const existingUser = await UserModel.findOne({ email: body.email });
+  const existingUser = await userService.getByEmail(body.email);
   if (existingUser) {
     setResponseStatus(event, 400);
     return { error: 'Mail already registered' };
   }
 
-  const hashedPassword = await bcrypt.hash(body.password, SALT_ROUNDS);
-  const newUser = new UserModel({
-    firstName: body.firstName,
-    lastName: body.lastName,
-    email: body.email,
-    hashedPassword: hashedPassword
-  });
-  await newUser.save();
+  await userService.save(body.firstName, body.lastName, body.email, body.password);
 
-  return { message: `User ${body.mail} successfully signed up`, user: { id: newUser.id } };
+  return { message: `User ${body.mail} successfully signed up` };
 });

@@ -1,5 +1,8 @@
 import { defineEventHandler, readBody, setResponseStatus } from 'h3';
-import { ContactFormModel } from '../db/models/contact-form.models';
+import type { ContactFormService } from '../services/contact-form.service';
+import { ContactFormServiceImpl } from '../services/impl/contact-form.service';
+
+const contactFormService: ContactFormService = new ContactFormServiceImpl();
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
@@ -10,12 +13,7 @@ export default defineEventHandler(async (event) => {
         return { error: 'Missing required fields' };
     }
 
-    const newContactForm = new ContactFormModel({
-        name: body.name,
-        email: body.email,
-        message: body.message
-    });
-    await newContactForm.save();
+    await contactFormService.save(body.name, body.email, body.message);
 
     return { message: `Contact form data succesfully saved for email ${body.email}` };
 });

@@ -1,8 +1,12 @@
 import bcrypt from 'bcrypt';
 import { defineEventHandler, readBody, setResponseStatus } from 'h3';
-import jwt from 'jsonwebtoken';
-import { JWT_SECRET, TOKEN_EXPIRES_IN } from '../constants/auth';
-import { UserModel } from '../db/models/users.models';
+import { TokenServiceImpl } from '../services/impl/token.service';
+import { UserServiceImpl } from '../services/impl/user.service';
+import type { TokenService } from '../services/token.service';
+import type { UserService } from '../services/user.service';
+
+const userService: UserService = new UserServiceImpl();
+const tokenService: TokenService = new TokenServiceImpl();
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
@@ -14,7 +18,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Find user
-    const user = await UserModel.findOne({ email: body.email });
+    const user = await userService.getByEmail(body.email);
     if (!user) {
         setResponseStatus(event, 404);
         return { error: 'User not found' };
@@ -26,7 +30,7 @@ export default defineEventHandler(async (event) => {
         return { error: 'Not authorized' };
     }
 
-    const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: TOKEN_EXPIRES_IN });
+    const token = tokenService.create(body.email);
 
-    return { message: 'Login successful', token: token, user: { id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email } };
+    return { message: 'Login successful', token: token, user: { firstName: user.firstName, lastName: user.lastName, email: user.email } };
 });

@@ -1,11 +1,14 @@
 import type { Document } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
-interface User extends Document {
+interface IUser {
     firstName: string;
     lastName: string;
     email: string;
     hashedPassword: string;
+}
+
+interface User extends Document, IUser {
     createdAt: Date;
 }
 
@@ -19,4 +22,4 @@ const UserSchema = new Schema<User>({
 
 const UserModel = model<User>('User', UserSchema);
 
-export { User, UserModel };
+export { IUser, User, UserModel };
