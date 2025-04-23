@@ -1,9 +1,7 @@
 <template>
     <UApp>
         <Navbar />
-        <div class="container mx-auto">
-            <NuxtPage />
-        </div>
+        <NuxtPage />
     </UApp>
 </template>
 
