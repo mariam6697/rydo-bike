@@ -10,13 +10,15 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/test-utils',
     '@nuxt/ui',
-    '@nuxt/test-utils/module'
+    '@nuxt/test-utils/module',
+    '@pinia/nuxt',
   ],
   nitro: {
     plugins: ["~/server/plugins/mongo.ts"],
   },
   runtimeConfig: {
     MONGO_URI: process.env.MONGO_URI,
+    JWT_SECRET: process.env.JWT_SECRET,
     public: {
       GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY
     }

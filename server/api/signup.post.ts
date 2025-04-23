@@ -1,8 +1,7 @@
 import bcrypt from 'bcrypt';
 import { defineEventHandler, readBody, setResponseStatus } from 'h3';
+import { SALT_ROUNDS } from '../constants/auth';
 import { UserModel } from '../db/models/users.models';
-
-const SALT_ROUNDS = 10;
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
