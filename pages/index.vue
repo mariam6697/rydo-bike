@@ -25,14 +25,17 @@
 
 
         <div class="bg-blue-950 text-center flex flex-col">
-            <div class="relative isolate px-6 flex flex-col justify-center py-16 md:py-0">
-                <div class="mx-auto max-w-2xl py-16">
-                    <h1 class="text-5xl font-semibold tracking-tight text-balance text-neutral-50 sm:text-7xl">Find your
+            <div class="relative isolate px-6 flex flex-col justify-center py-8 md:py-0">
+                <div class="mx-auto py-16">
+                    <h1 class="text-5xl font-semibold tracking-tight text-balance text-neutral-50 sm:text-7xl py-8">Find your
                         bike!</h1>
-                    <p class="mt-8 text-lg font-medium text-pretty text-gray-500 sm:text-xl/8"> {insert map}.</p>
-                    
+                    <BikeMap />
                 </div>
             </div>
         </div>
     </div>
 </template>
+
+<script setup lang="ts">
+import BikeMap from '~/components/bike-map.vue';
+</script>

@@ -16,6 +16,9 @@ export default defineNuxtConfig({
     plugins: ["~/server/plugins/mongo.ts"],
   },
   runtimeConfig: {
-    MONGO_URI: process.env.MONGO_URI
+    MONGO_URI: process.env.MONGO_URI,
+    public: {
+      GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY
+    }
   },
 })
