@@ -1,2 +1,6 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+:root {
+  --ui-text: theme(colors.gray.700);
+}
