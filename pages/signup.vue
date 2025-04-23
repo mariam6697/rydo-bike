@@ -2,6 +2,10 @@
   <UCard class="bg-neutral-100 text-gray-800 mx-auto my-12 w-96" variant="solid">
     <h1 class="text-3xl font-semibold mb-2">Signup to Rydo</h1>
 
+    <template v-if="signUpError">
+      <UAlert color="error" title="An error occurred :(" description="Please review your information or try again later." />
+    </template>
+
     <UForm :schema="schema" :state="state" class="text-gray-800 space-y-4 h-auto py-2" @submit="onSubmit">
       <UFormField class="text-gray-800" label="First name" name="first-name">
         <UInput v-model="state.firstName" class="w-full" placeholder="Jane" />
@@ -34,8 +38,10 @@
 </template>
 
 <script setup lang="ts">
-import * as z from 'zod'
-import type { FormSubmitEvent } from '@nuxt/ui'
+import type { FormSubmitEvent } from '@nuxt/ui';
+import * as z from 'zod';
+
+const signUpError = ref(false);
 
 const schema = z.object({
   firstName: z.string().min(2, 'Invalid name'),
@@ -50,18 +56,35 @@ const schema = z.object({
 
 type Schema = z.output<typeof schema>
 
-const state = reactive<Partial<Schema>>({
-  firstName: undefined,
-  lastName: undefined,
-  email: undefined,
-  password: undefined,
-  confirmPassword: undefined
+const state = reactive<Schema>({
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+  confirmPassword: ''
 })
 
 async function onSubmit(_event: FormSubmitEvent<Schema>) {
-  console.log('Succesfully signed up?')
-  console.log('Return to home...');
+  // const success = await _postToSignup({ firstName: _event.data.firstName, lastName: _event.data.lastName, email: _event.data.email, password: _event.data.password });
+  const success = await _postToSignup(state);
 
-  await navigateTo({ path: '/' });
+  if (success) {
+    await navigateTo({ path: '/', query: { successSignup: 'true' } });
+  } else {
+    signUpError.value = true;
+  }
+}
+
+async function _postToSignup(data: { firstName: string, lastName: string, email: string, password: string }): Promise<boolean> {
+  try {
+    await $fetch('/api/signup', {
+      method: 'POST',
+      body: data
+    });
+    return true;
+  } catch (error) {
+    console.log('Error signing up to backend:', error);
+    return false;
+  }
 }
 </script>
