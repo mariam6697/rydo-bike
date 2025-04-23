@@ -65,7 +65,6 @@ const state = reactive<Schema>({
 })
 
 async function onSubmit(_event: FormSubmitEvent<Schema>) {
-  // const success = await _postToSignup({ firstName: _event.data.firstName, lastName: _event.data.lastName, email: _event.data.email, password: _event.data.password });
   const success = await _postToSignup(state);
 
   if (success) {
