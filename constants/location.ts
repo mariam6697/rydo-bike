@@ -42,3 +42,8 @@ export const defaultMapOptions = {
     minZoom: 3,
     styles: [],
 };
+
+export const currentLocationMarker = {
+    id: 'current-location',
+    icon: '/images/user-icon.png'
+};
